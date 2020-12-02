@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2020/12/1 15:44:13                           */
+/* Created on:     2020/12/2 17:21:43                           */
 /*==============================================================*/
 
 
@@ -8,7 +8,7 @@ drop table if exists admin;
 
 drop table if exists demand_label;
 
-drop table if exists "label";
+drop table if exists label;
 
 drop table if exists pro_demand;
 
@@ -21,6 +21,8 @@ drop table if exists product_pic;
 drop table if exists user;
 
 drop table if exists user_favorites;
+
+drop table if exists user_message;
 
 drop table if exists user_order;
 
@@ -47,7 +49,7 @@ create table demand_label
 /*==============================================================*/
 /* Table: "label"                                               */
 /*==============================================================*/
-create table "label"
+create table label
 (
    label_id             int not null,
    label_name           varchar(50) not null,
@@ -128,6 +130,17 @@ create table user_favorites
 );
 
 /*==============================================================*/
+/* Table: user_message                                          */
+/*==============================================================*/
+create table user_message
+(
+   user_id              int not null,
+   product_id           int not null,
+   message              varchar(1024),
+   primary key (user_id, product_id)
+);
+
+/*==============================================================*/
 /* Table: user_order                                            */
 /*==============================================================*/
 create table user_order
@@ -142,9 +155,9 @@ alter table demand_label add constraint FK_demand_label foreign key (demand_id)
       references pro_demand (demand_id) on delete restrict on update restrict;
 
 alter table demand_label add constraint FK_demand_label2 foreign key (label_id)
-      references "label" (label_id) on delete restrict on update restrict;
+      references label (label_id) on delete restrict on update restrict;
 
-alter table pro_demand add constraint "FK_user-demand" foreign key (user_id)
+alter table pro_demand add constraint FK_user_demand foreign key (user_id)
       references user (user_id) on delete restrict on update restrict;
 
 alter table product add constraint FK_user_pro foreign key (user_id)
@@ -154,7 +167,7 @@ alter table product_label add constraint FK_product_label foreign key (product_i
       references product (product_id) on delete restrict on update restrict;
 
 alter table product_label add constraint FK_product_label2 foreign key (label_id)
-      references "label" (label_id) on delete restrict on update restrict;
+      references label (label_id) on delete restrict on update restrict;
 
 alter table product_pic add constraint FK_pro_pic foreign key (product_id)
       references product (product_id) on delete restrict on update restrict;
@@ -163,6 +176,12 @@ alter table user_favorites add constraint FK_user_favorites foreign key (user_id
       references user (user_id) on delete restrict on update restrict;
 
 alter table user_favorites add constraint FK_user_favorites2 foreign key (product_id)
+      references product (product_id) on delete restrict on update restrict;
+
+alter table user_message add constraint FK_user_message foreign key (user_id)
+      references user (user_id) on delete restrict on update restrict;
+
+alter table user_message add constraint FK_user_message2 foreign key (product_id)
       references product (product_id) on delete restrict on update restrict;
 
 alter table user_order add constraint FK_user_order foreign key (user_id)
